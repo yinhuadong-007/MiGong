@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>小小迷宫大冒险</title>
+  <style>
+    :root {
+      --bg: #fef6e4;
+      --card: #ffffff;
+      --ink: #2b2d42;
+      --accent: #ff8fab;
+      --accent-2: #90dbf4;
+      --ok: #8bd3dd;
+      --wall: #8bc34a;
+      --path: #fff9c4;
+      --goal: #ffd166;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(180deg, #fff6e9 0%, #e8f7ff 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      touch-action: manipulation;
+      overscroll-behavior: none;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .card {
+      width: min(920px, 100%);
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 14px 35px rgba(0,0,0,.1);
+      padding: 20px;
+    }
+
+    h1, h2, p { margin: 10px 0; text-align: center; }
+
+    .hidden { display: none !important; }
+
+    .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 20px;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 0 #e56b93;
+      transition: transform .05s ease;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #e56b93; }
+
+    .center { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 10px 0 16px;
+    }
+    .pill {
+      background: #f5f7ff;
+      border: 2px dashed #c7d2fe;
+      border-radius: 14px;
+      text-align: center;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    #maze {
+      width: fit-content;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), var(--cell, 56px));
+      grid-template-rows: repeat(var(--rows), var(--cell, 56px));
+      gap: 2px;
+      background: #cbd5e1;
+      padding: 6px;
+      border-radius: 16px;
+      user-select: none;
+    }
+
+    .cell {
+      width: var(--cell, 56px);
+      height: var(--cell, 56px);
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--cell, 56px) * 0.54);
+      border-radius: 10px;
+    }
+    .wall { background: var(--wall); }
+    .path { background: var(--path); }
+    .goal { background: var(--goal); }
+
+    .controls {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 74px);
+      gap: 8px;
+      justify-items: center;
+      align-items: center;
+    }
+    .move {
+      width: 74px;
+      height: 62px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--accent-2);
+      font-size: 26px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #55b5d8;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .move:active { transform: translateY(2px); box-shadow: 0 2px 0 #55b5d8; }
+
+    .tip {
+      background: #ecfeff;
+      border: 2px dashed #67e8f9;
+      border-radius: 12px;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 680px) {
+      .hud { grid-template-columns: repeat(2, minmax(120px,1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <section id="startScreen">
+      <h1>🐰 小小迷宫大冒险</h1>
+      <p>给 3 岁小朋友的超简单迷宫游戏</p>
+      <p>用方向按钮移动小兔子，走到 🏠 就过关！</p>
+      <p>共 <b>50 关</b>，每关有 <b>5 个⭐标记</b>，每隔 5 关会更难一点点。</p>
+      <p id="saveInfo">本地记录：最高到第 0 关</p>
+      <div class="center" style="margin-top:14px;">
+        <button id="startBtn" class="btn">开始游戏</button>
+        <button id="openSettingsBtn" class="btn" style="background:#8bd3dd;box-shadow:0 6px 0 #53a9b3;">设置</button>
+      </div>
+    </section>
+
+    <section id="settingsScreen" class="hidden">
+      <h2>⚙️ 设置</h2>
+      <p id="settingsStats"></p>
+      <div class="center" style="margin-top:10px;">
+        <button id="resetDataBtn" class="btn" style="background:#ff6b6b;box-shadow:0 6px 0 #d94848;">重置本地数据</button>
+        <button id="backFromSettingsBtn" class="btn" style="background:#8bd3dd;box-shadow:0 6px 0 #53a9b3;">返回</button>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="hidden">
+      <h2 id="levelTitle">第 1 关</h2>
+      <div class="hud">
+        <div class="pill" id="levelInfo">关卡：1 / 50</div>
+        <div class="pill" id="stepsInfo">步数：0</div>
+        <div class="pill" id="markerInfo">⭐标记剩余：5</div>
+        <div class="pill" id="charInfo">角色：🐰</div>
+        <div class="pill" id="bestInfo">历史最高：0</div>
+      </div>
+
+      <div id="maze" aria-label="maze"></div>
+
+      <div class="controls">
+        <div class="tip">键盘方向键可移动；按「放置⭐标记」可做路标</div>
+
+        <div class="dpad">
+          <span></span>
+          <button class="move" data-dir="up">⬆️</button>
+          <span></span>
+
+          <button class="move" data-dir="left">⬅️</button>
+          <button id="markBtn" class="move" style="background:#ffd166;box-shadow:0 4px 0 #e6a800;">⭐</button>
+          <button class="move" data-dir="right">➡️</button>
+
+          <span></span>
+          <button class="move" data-dir="down">⬇️</button>
+          <span></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="endScreen" class="hidden">
+      <h2>🎉 通关成功！</h2>
+      <p id="finalText"></p>
+      <p>你真棒！再来一次吧～</p>
+      <div class="center" style="margin-top:14px;">
+        <button id="restartBtn" class="btn">再玩一次</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+(() => {
+  const STORAGE_KEY = "kids_maze_save_v1";
+  const DEFAULT_SAVE = {
+    bestLevel: 0,
+    totalPlays: 0,
+    totalWins: 0,
+    allTimeSteps: 0,
+    allTimeMarkers: 0
+  };
+
+  const characters = ["🐰","🐱","🐶","🐼","🦊","🐸","🐨","🦁","🐯","🐮","🐵","🐤","🐧","🦄","🐙","🦕","🐢","🦉","🐷","🐺"];
+
+  function shuffle(arr) {
+    const copy = arr.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function randInt(min, max) {
+    return min + Math.floor(Math.random() * (max - min + 1));
+  }
+
+  function cloneGrid(grid) {
+    return grid.map(row => row.slice());
+  }
+
+  function countSimplePaths(grid, start, goal, limit = 2) {
+    const h = grid.length;
+    const w = grid[0].length;
+    const visited = Array.from({ length: h }, () => Array(w).fill(false));
+    let count = 0;
+
+    function walk(x, y) {
+      if (count >= limit) return;
+      if (x === goal.x && y === goal.y) {
+        count += 1;
+        return;
+      }
+
+      visited[y][x] = true;
+      const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+      for (const [dx, dy] of dirs) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        if (visited[ny][nx]) continue;
+        if (grid[ny][nx] === "#") continue;
+        walk(nx, ny);
+      }
+      visited[y][x] = false;
+    }
+
+    walk(start.x, start.y);
+    return count;
+  }
+
+  function buildClassicLevel(levelIndex) {
+    const tier = Math.floor(levelIndex / 5);
+    const size = 9 + tier * 2;
+    const grid = Array.from({ length: size }, () => Array(size).fill("#"));
+
+    function carve(x, y) {
+      grid[y][x] = ".";
+      const dirs = shuffle([[2,0],[-2,0],[0,2],[0,-2]]);
+      for (const [dx, dy] of dirs) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
+        if (grid[ny][nx] !== "#") continue;
+        grid[y + dy / 2][x + dx / 2] = ".";
+        carve(nx, ny);
+      }
+    }
+
+    carve(1, 1);
+    grid[1][1] = "S";
+    grid[size - 2][size - 2] = "G";
+    return grid.map(row => row.join(""));
+  }
+
+  function placeLoopAtAnchor(grid, ax, ay) {
+    const patterns = [
+      [[1,0],[2,-1],[2,0],[2,1],[3,-1],[3,1],[4,-1],[4,0],[4,1]],
+      [[-1,0],[-2,-1],[-2,0],[-2,1],[-3,-1],[-3,1],[-4,-1],[-4,0],[-4,1]],
+      [[0,1],[-1,2],[0,2],[1,2],[-1,3],[1,3],[-1,4],[0,4],[1,4]],
+      [[0,-1],[-1,-2],[0,-2],[1,-2],[-1,-3],[1,-3],[-1,-4],[0,-4],[1,-4]]
+    ];
+
+    for (const rels of shuffle(patterns)) {
+      const cells = rels.map(([dx, dy]) => [ax + dx, ay + dy]);
+      const ok = cells.every(([x, y]) => y > 0 && x > 0 && y < grid.length - 1 && x < grid[0].length - 1 && grid[y][x] === "#");
+      if (!ok) continue;
+      cells.forEach(([x, y]) => { grid[y][x] = "."; });
+      return true;
+    }
+    return false;
+  }
+
+  function growDeadBranch(grid, sx, sy, used, maxLen) {
+    let x = sx;
+    let y = sy;
+    let len = 0;
+
+    const dirs = shuffle([[1,0],[-1,0],[0,1],[0,-1]]);
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (ny <= 0 || nx <= 0 || ny >= grid.length - 1 || nx >= grid[0].length - 1) continue;
+      if (grid[ny][nx] !== "#") continue;
+
+      while (len < maxLen) {
+        const tx = x + dx;
+        const ty = y + dy;
+        if (ty <= 0 || tx <= 0 || ty >= grid.length - 1 || tx >= grid[0].length - 1) break;
+        if (grid[ty][tx] !== "#") break;
+
+        grid[ty][tx] = ".";
+        used.add(`${tx},${ty}`);
+        x = tx;
+        y = ty;
+        len += 1;
+
+        if (Math.random() < 0.3) break;
+      }
+      break;
+    }
+  }
+
+  function buildLoopBranchLevel(levelIndex) {
+    const tier = Math.floor((levelIndex - 10) / 5);
+    const size = 13 + tier * 2;
+    const start = { x: 1, y: 1 };
+    const goal = { x: size - 2, y: size - 2 };
+
+    for (let attempt = 0; attempt < 80; attempt++) {
+      const grid = Array.from({ length: size }, () => Array(size).fill("#"));
+      const path = [[start.x, start.y]];
+      const used = new Set([`${start.x},${start.y}`]);
+
+      let x = start.x;
+      let y = start.y;
+      while (x < goal.x || y < goal.y) {
+        const options = [];
+        if (x < goal.x) options.push([1, 0]);
+        if (y < goal.y) options.push([0, 1]);
+        const [dx, dy] = options[Math.floor(Math.random() * options.length)];
+        x += dx;
+        y += dy;
+        path.push([x, y]);
+        used.add(`${x},${y}`);
+      }
+
+      path.forEach(([px, py]) => { grid[py][px] = "."; });
+
+      const middleAnchors = path.slice(2, -3);
+      let loopPlaced = false;
+      for (const [ax, ay] of shuffle(middleAnchors)) {
+        if (placeLoopAtAnchor(grid, ax, ay)) {
+          loopPlaced = true;
+          break;
+        }
+      }
+      if (!loopPlaced) continue;
+
+      const branchCount = 6 + tier * 2;
+      for (let i = 0; i < branchCount; i++) {
+        const [bx, by] = middleAnchors[Math.floor(Math.random() * middleAnchors.length)] || [2,2];
+        growDeadBranch(grid, bx, by, used, randInt(2, 4 + tier));
+      }
+
+      grid[start.y][start.x] = "S";
+      grid[goal.y][goal.x] = "G";
+
+      const pathCount = countSimplePaths(grid, start, goal, 2);
+      if (pathCount === 1) return grid.map(row => row.join(""));
+    }
+
+    return buildClassicLevel(levelIndex);
+  }
+
+  function buildPictureLevel1() {
+    const n = 19;
+    const grid = Array.from({ length: n }, () => Array(n).fill("#"));
+
+    const points = [
+      [15, 1], [3, 1], [3, 15], [15, 15], [15, 3],
+      [5, 3], [5, 13], [13, 13], [13, 5], [7, 5],
+      [7, 11], [11, 11], [11, 7], [9, 7], [9, 9]
+    ];
+
+    function carveLine(x1, y1, x2, y2) {
+      const dx = Math.sign(x2 - x1);
+      const dy = Math.sign(y2 - y1);
+      let x = x1, y = y1;
+      grid[y][x] = ".";
+      while (x !== x2 || y !== y2) {
+        x += dx;
+        y += dy;
+        grid[y][x] = ".";
+      }
+    }
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const [x1, y1] = points[i];
+      const [x2, y2] = points[i + 1];
+      carveLine(x1, y1, x2, y2);
+    }
+
+    grid[1][15] = "S"; // 右上外圈入口，贴近参考图小人位置
+    grid[9][9] = "G";  // 中心终点，贴近参考图中心箭头
+
+    return grid.map(row => row.join(""));
+  }
+
+  function buildLevels(total = 50) {
+    const result = [];
+    for (let i = 0; i < total; i++) {
+      if (i === 0) result.push(buildPictureLevel1());
+      else if (i >= 10) result.push(buildLoopBranchLevel(i));
+      else result.push(buildClassicLevel(i));
+    }
+    return result;
+  }
+
+  function loadSave() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { ...DEFAULT_SAVE };
+      const obj = JSON.parse(raw);
+      return { ...DEFAULT_SAVE, ...obj };
+    } catch {
+      return { ...DEFAULT_SAVE };
+    }
+  }
+
+  const levels = buildLevels(50);
+
+  const state = {
+    levelIndex: 0,
+    grid: [],
+    rows: 0,
+    cols: 0,
+    player: { x: 0, y: 0 },
+    goal: { x: 0, y: 0 },
+    markersLeft: 5,
+    markers: new Set(),
+    stepsInLevel: 0,
+    totalSteps: 0,
+    totalMarkersUsed: 0,
+    currentCharacter: "🐰",
+    save: loadSave()
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const startScreen = $("startScreen");
+  const settingsScreen = $("settingsScreen");
+  const gameScreen = $("gameScreen");
+  const endScreen = $("endScreen");
+  const mazeEl = $("maze");
+  const levelTitle = $("levelTitle");
+  const levelInfo = $("levelInfo");
+  const stepsInfo = $("stepsInfo");
+  const markerInfo = $("markerInfo");
+  const charInfo = $("charInfo");
+  const bestInfo = $("bestInfo");
+  const finalText = $("finalText");
+  const saveInfo = $("saveInfo");
+  const settingsStats = $("settingsStats");
+
+  function saveLocal() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.save));
+    refreshSaveInfo();
+  }
+
+  function refreshSaveInfo() {
+    saveInfo.textContent = `本地记录：最高到第 ${state.save.bestLevel} 关，累计游玩 ${state.save.totalPlays} 次`;
+    settingsStats.textContent = `最高关卡：${state.save.bestLevel} ｜ 通关次数：${state.save.totalWins} ｜ 累计步数：${state.save.allTimeSteps} ｜ 累计标记：${state.save.allTimeMarkers}`;
+  }
+
+  function pickCharacter() {
+    state.currentCharacter = characters[Math.floor(Math.random() * characters.length)];
+  }
+
+  function parseLevel(raw) {
+    state.grid = raw.map(row => row.split(""));
+    state.rows = state.grid.length;
+    state.cols = state.grid[0].length;
+    for (let y = 0; y < state.rows; y++) {
+      for (let x = 0; x < state.cols; x++) {
+        const c = state.grid[y][x];
+        if (c === "S") state.player = { x, y };
+        if (c === "G") state.goal = { x, y };
+      }
+    }
+    state.markersLeft = 5;
+    state.markers = new Set();
+    state.stepsInLevel = 0;
+    pickCharacter();
+  }
+
+  function updateHud() {
+    levelTitle.textContent = `第 ${state.levelIndex + 1} 关`;
+    levelInfo.textContent = `关卡：${state.levelIndex + 1} / ${levels.length}`;
+    stepsInfo.textContent = `步数：${state.stepsInLevel}`;
+    markerInfo.textContent = `⭐标记剩余：${state.markersLeft}`;
+    charInfo.textContent = `角色：${state.currentCharacter}`;
+    bestInfo.textContent = `历史最高：${state.save.bestLevel}`;
+  }
+
+  function cellType(x, y) {
+    const c = state.grid[y][x];
+    if (c === "#") return "wall";
+    if (c === "G") return "goal";
+    return "path";
+  }
+
+  function updateCellSize() {
+    const w = Math.max(window.innerWidth - 90, 280);
+    const h = Math.max(window.innerHeight - 360, 220);
+    const byWidth = Math.floor(w / state.cols);
+    const byHeight = Math.floor(h / state.rows);
+    const cell = Math.max(22, Math.min(56, byWidth, byHeight));
+    mazeEl.style.setProperty("--cell", `${cell}px`);
+  }
+
+  function render() {
+    mazeEl.style.setProperty("--rows", state.rows);
+    mazeEl.style.setProperty("--cols", state.cols);
+    updateCellSize();
+    mazeEl.innerHTML = "";
+
+    for (let y = 0; y < state.rows; y++) {
+      for (let x = 0; x < state.cols; x++) {
+        const div = document.createElement("div");
+        div.className = `cell ${cellType(x, y)}`;
+
+        const key = `${x},${y}`;
+        if (state.markers.has(key)) div.textContent = "⭐";
+        if (x === state.goal.x && y === state.goal.y) div.textContent = "🏠";
+        if (x === state.player.x && y === state.player.y) div.textContent = state.currentCharacter;
+
+        mazeEl.appendChild(div);
+      }
+    }
+
+    updateHud();
+  }
+
+  function canWalk(x, y) {
+    if (x < 0 || y < 0 || x >= state.cols || y >= state.rows) return false;
+    return state.grid[y][x] !== "#";
+  }
+
+  function move(dx, dy) {
+    const nx = state.player.x + dx;
+    const ny = state.player.y + dy;
+    if (!canWalk(nx, ny)) return;
+
+    state.player = { x: nx, y: ny };
+    state.stepsInLevel += 1;
+    state.totalSteps += 1;
+    render();
+
+    if (nx === state.goal.x && ny === state.goal.y) {
+      setTimeout(nextLevel, 180);
+    }
+  }
+
+  function placeMarker() {
+    const key = `${state.player.x},${state.player.y}`;
+    if (state.markers.has(key)) return;
+    if (state.markersLeft <= 0) return;
+
+    state.markers.add(key);
+    state.markersLeft -= 1;
+    state.totalMarkersUsed += 1;
+    render();
+  }
+
+  function nextLevel() {
+    const reachedLevel = state.levelIndex + 1;
+    if (reachedLevel > state.save.bestLevel) {
+      state.save.bestLevel = reachedLevel;
+      saveLocal();
+    }
+
+    state.levelIndex += 1;
+    if (state.levelIndex >= levels.length) {
+      showEnd();
+      return;
+    }
+    parseLevel(levels[state.levelIndex]);
+    render();
+  }
+
+  function startGame() {
+    state.levelIndex = 0;
+    state.totalSteps = 0;
+    state.totalMarkersUsed = 0;
+
+    state.save.totalPlays += 1;
+    saveLocal();
+
+    parseLevel(levels[state.levelIndex]);
+    startScreen.classList.add("hidden");
+    settingsScreen.classList.add("hidden");
+    endScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    render();
+  }
+
+  function showEnd() {
+    gameScreen.classList.add("hidden");
+    endScreen.classList.remove("hidden");
+
+    state.save.totalWins += 1;
+    state.save.allTimeSteps += state.totalSteps;
+    state.save.allTimeMarkers += state.totalMarkersUsed;
+    if (levels.length > state.save.bestLevel) state.save.bestLevel = levels.length;
+    saveLocal();
+
+    finalText.textContent = `你完成了 ${levels.length} 关！共走了 ${state.totalSteps} 步，用了 ${state.totalMarkersUsed} 个⭐标记。`;
+  }
+
+  function openSettings() {
+    startScreen.classList.add("hidden");
+    endScreen.classList.add("hidden");
+    gameScreen.classList.add("hidden");
+    settingsScreen.classList.remove("hidden");
+    refreshSaveInfo();
+  }
+
+  function backToStart() {
+    settingsScreen.classList.add("hidden");
+    gameScreen.classList.add("hidden");
+    endScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+    refreshSaveInfo();
+  }
+
+  function resetData() {
+    const ok = confirm("确定要重置本地数据吗？\n（最高关卡、累计步数都会清空）");
+    if (!ok) return;
+
+    state.save = { ...DEFAULT_SAVE };
+    localStorage.removeItem(STORAGE_KEY);
+    saveLocal();
+    alert("本地数据已重置 ✅");
+    backToStart();
+  }
+
+  document.querySelectorAll(".move[data-dir]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dir = btn.dataset.dir;
+      if (dir === "up") move(0, -1);
+      if (dir === "down") move(0, 1);
+      if (dir === "left") move(-1, 0);
+      if (dir === "right") move(1, 0);
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    const key = e.key;
+    if (gameScreen.classList.contains("hidden")) return;
+    if (key === "ArrowUp") { e.preventDefault(); move(0, -1); }
+    if (key === "ArrowDown") { e.preventDefault(); move(0, 1); }
+    if (key === "ArrowLeft") { e.preventDefault(); move(-1, 0); }
+    if (key === "ArrowRight") { e.preventDefault(); move(1, 0); }
+    if (key.toLowerCase() === "m" || key === " ") { e.preventDefault(); placeMarker(); }
+  });
+
+  window.addEventListener("resize", () => {
+    if (!gameScreen.classList.contains("hidden")) render();
+  });
+
+  $("startBtn").addEventListener("click", startGame);
+  $("restartBtn").addEventListener("click", startGame);
+  $("markBtn").addEventListener("click", placeMarker);
+  $("openSettingsBtn").addEventListener("click", openSettings);
+  $("backFromSettingsBtn").addEventListener("click", backToStart);
+  $("resetDataBtn").addEventListener("click", resetData);
+
+  window.__mazeDebug = { levels };
+  refreshSaveInfo();
+})();
+</script>
+</body>
+</html>
