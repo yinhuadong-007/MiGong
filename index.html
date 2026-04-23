@@ -15,9 +15,25 @@
       --wall: #8bc34a;
       --path: #fff9c4;
       --goal: #ffd166;
+      --page-pad: 16px;
+      --card-pad: 20px;
+      --hud-gap: 10px;
+      --hud-pad: 10px;
+      --hud-font: 18px;
+      --tip-font: 16px;
+      --move-w: 74px;
+      --move-h: 62px;
+      --move-font: 26px;
+      --dpad-gap: 8px;
+      --maze-gap: 2px;
+      --maze-pad: 6px;
+      --cell: 56px;
+      --cell-radius: 10px;
+      --cell-font: 30px;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -26,7 +42,7 @@
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 16px;
+      padding: var(--page-pad);
       touch-action: manipulation;
       overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
@@ -37,11 +53,10 @@
       background: var(--card);
       border-radius: 24px;
       box-shadow: 0 14px 35px rgba(0,0,0,.1);
-      padding: 20px;
+      padding: var(--card-pad);
     }
 
     h1, h2, p { margin: 10px 0; text-align: center; }
-
     .hidden { display: none !important; }
 
     .btn {
@@ -59,24 +74,25 @@
       -webkit-user-select: none;
       user-select: none;
     }
-    .btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #e56b93; }
 
+    .btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #e56b93; }
     .center { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
     .hud {
       display: grid;
       grid-template-columns: repeat(5, minmax(120px, 1fr));
-      gap: 10px;
+      gap: var(--hud-gap);
       margin: 10px 0 16px;
     }
+
     .pill {
       background: #f5f7ff;
       border: 2px dashed #c7d2fe;
       border-radius: 14px;
       text-align: center;
-      padding: 10px;
+      padding: var(--hud-pad);
       font-weight: 700;
-      font-size: 18px;
+      font-size: var(--hud-font);
     }
 
     #maze {
@@ -85,9 +101,9 @@
       display: grid;
       grid-template-columns: repeat(var(--cols), var(--cell, 56px));
       grid-template-rows: repeat(var(--rows), var(--cell, 56px));
-      gap: 2px;
+      gap: var(--maze-gap);
       background: #cbd5e1;
-      padding: 6px;
+      padding: var(--maze-pad);
       border-radius: 16px;
       user-select: none;
     }
@@ -97,9 +113,11 @@
       height: var(--cell, 56px);
       display: grid;
       place-items: center;
-      font-size: calc(var(--cell, 56px) * 0.54);
-      border-radius: 10px;
+      font-size: var(--cell-font);
+      border-radius: var(--cell-radius);
+      line-height: 1;
     }
+
     .wall { background: var(--wall); }
     .path { background: var(--path); }
     .goal { background: var(--goal); }
@@ -110,20 +128,22 @@
       gap: 10px;
       justify-items: center;
     }
+
     .dpad {
       display: grid;
-      grid-template-columns: repeat(3, 74px);
-      gap: 8px;
+      grid-template-columns: repeat(3, var(--move-w));
+      gap: var(--dpad-gap);
       justify-items: center;
       align-items: center;
     }
+
     .move {
-      width: 74px;
-      height: 62px;
+      width: var(--move-w);
+      height: var(--move-h);
       border: 0;
       border-radius: 14px;
       background: var(--accent-2);
-      font-size: 26px;
+      font-size: var(--move-font);
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 0 #55b5d8;
@@ -131,6 +151,7 @@
       -webkit-user-select: none;
       user-select: none;
     }
+
     .move:active { transform: translateY(2px); box-shadow: 0 2px 0 #55b5d8; }
 
     .tip {
@@ -139,12 +160,161 @@
       border-radius: 12px;
       padding: 8px 12px;
       text-align: center;
+      font-size: var(--tip-font);
+      font-weight: 700;
+    }
+
+    .jump-panel {
+      margin-top: 14px;
+      background: #f8fbff;
+      border: 2px dashed #bfd7ff;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .jump-label {
+      display: block;
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .jump-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .level-select {
+      min-width: 160px;
+      border: 2px solid #bfd7ff;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 12px;
       font-size: 16px;
       font-weight: 700;
     }
 
+    .btn.subtle {
+      background: #8bd3dd;
+      box-shadow: 0 6px 0 #53a9b3;
+    }
+
+    .btn.small {
+      padding: 10px 16px;
+      font-size: 17px;
+      border-radius: 14px;
+    }
+
+    .jump-help {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: #516074;
+    }
+
+    .result-card {
+      margin-top: 16px;
+      background: linear-gradient(180deg, #fffaf0 0%, #eef9ff 100%);
+      border: 2px dashed #ffd27a;
+      border-radius: 20px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 132px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      color: #e67e22;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(255, 191, 73, .2);
+    }
+
+    .result-stars {
+      margin-top: 12px;
+      font-size: 30px;
+      letter-spacing: 4px;
+    }
+
+    .result-message {
+      margin: 12px auto 0;
+      max-width: 420px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #48556a;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .result-pill {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 10px;
+      box-shadow: inset 0 0 0 2px #dbeafe;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
     @media (max-width: 680px) {
-      .hud { grid-template-columns: repeat(2, minmax(120px,1fr)); }
+      :root {
+        --page-pad: 10px;
+        --card-pad: 14px;
+        --hud-gap: 8px;
+        --hud-pad: 8px;
+        --hud-font: 15px;
+        --tip-font: 14px;
+        --move-w: 62px;
+        --move-h: 52px;
+        --move-font: 22px;
+        --dpad-gap: 6px;
+      }
+
+      body { place-items: start center; }
+      h1, h2, p { margin: 8px 0; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls { margin-top: 12px; gap: 8px; }
+      .jump-panel { margin-top: 12px; padding: 10px; }
+      .level-select { min-width: 140px; font-size: 15px; padding: 9px 10px; }
+      .btn.small { font-size: 15px; padding: 9px 14px; }
+      .result-card { padding: 14px 12px; }
+      .result-message { font-size: 16px; }
+      .result-grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    @media (max-width: 420px), (max-height: 760px) {
+      :root {
+        --page-pad: 8px;
+        --card-pad: 12px;
+        --hud-gap: 6px;
+        --hud-pad: 7px;
+        --hud-font: 14px;
+        --tip-font: 13px;
+        --move-w: 56px;
+        --move-h: 48px;
+        --move-font: 20px;
+        --dpad-gap: 5px;
+      }
+
+      .tip { padding: 7px 10px; }
+      .jump-row { gap: 8px; }
+      .level-select { min-width: 126px; font-size: 14px; }
+      .result-badge { min-width: 112px; font-size: 16px; }
+      .result-stars { font-size: 26px; }
+      .result-pill { font-size: 15px; }
     }
   </style>
 </head>
@@ -152,10 +322,18 @@
   <div class="card">
     <section id="startScreen">
       <h1>🐰 小小迷宫大冒险</h1>
-      <p>给 3 岁小朋友的超简单迷宫游戏</p>
-      <p>用方向按钮移动小兔子，走到 🏠 就过关！</p>
-      <p>共 <b>50 关</b>，每关有 <b>5 个⭐标记</b>，每隔 5 关会更难一点点。</p>
+      <p>适合小朋友，也欢迎喜欢迷宫的大朋友挑战。</p>
+      <p>用方向按钮移动角色，走到 🏁 就能过关。</p>
+      <p>一共有 <b>50 关</b>，每关有 <b>5 个标记</b>，后面的迷宫会越来越绕。</p>
       <p id="saveInfo">本地记录：最高到第 0 关</p>
+      <div class="jump-panel">
+        <label class="jump-label" for="startLevelSelect">选关开始</label>
+        <div class="jump-row">
+          <select id="startLevelSelect" class="level-select" aria-label="start level select"></select>
+          <button id="jumpStartBtn" class="btn subtle small">从这一关开始</button>
+        </div>
+        <p class="jump-help" id="jumpHelp">可以直接从任意关开始新的一局。</p>
+      </div>
       <div class="center" style="margin-top:14px;">
         <button id="startBtn" class="btn">开始游戏</button>
         <button id="openSettingsBtn" class="btn" style="background:#8bd3dd;box-shadow:0 6px 0 #53a9b3;">设置</button>
@@ -176,7 +354,7 @@
       <div class="hud">
         <div class="pill" id="levelInfo">关卡：1 / 50</div>
         <div class="pill" id="stepsInfo">步数：0</div>
-        <div class="pill" id="markerInfo">⭐标记剩余：5</div>
+        <div class="pill" id="markerInfo">标记剩余：5</div>
         <div class="pill" id="charInfo">角色：🐰</div>
         <div class="pill" id="bestInfo">历史最高：0</div>
       </div>
@@ -184,7 +362,7 @@
       <div id="maze" aria-label="maze"></div>
 
       <div class="controls">
-        <div class="tip">键盘方向键可移动；按「放置⭐标记」可做路标</div>
+        <div class="tip">方向键也能移动，按“放标记”可以给自己留路线提示。</div>
 
         <div class="dpad">
           <span></span>
@@ -199,508 +377,1452 @@
           <button class="move" data-dir="down">⬇️</button>
           <span></span>
         </div>
+
+        <div class="jump-panel">
+          <label class="jump-label" for="gameLevelSelect">跳关</label>
+          <div class="jump-row">
+            <select id="gameLevelSelect" class="level-select" aria-label="game level select"></select>
+            <button id="jumpBtn" class="btn subtle small">跳到这一关</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="levelCompleteScreen" class="hidden">
+      <h2 id="levelCompleteTitle">第 1 关完成</h2>
+      <div class="result-card">
+        <div class="result-badge" id="levelCompleteBadge">过关啦</div>
+        <div class="result-stars" id="levelCompleteStars" aria-label="stars">⭐⭐⭐</div>
+        <p class="result-message" id="levelCompleteMessage"></p>
+        <div class="result-grid">
+          <div class="result-pill" id="levelCompleteSteps">步数：0</div>
+          <div class="result-pill" id="levelCompleteMarkers">标记：0</div>
+          <div class="result-pill" id="levelCompleteNext">下一关：第 2 关</div>
+        </div>
+      </div>
+      <div class="center" style="margin-top:14px;">
+        <button id="replayVoiceBtn" class="btn subtle">重播语音</button>
+        <button id="nextLevelBtn" class="btn">下一关</button>
+        <button id="backToStartBtn" class="btn" style="background:#8bd3dd;box-shadow:0 6px 0 #53a9b3;">返回首页</button>
       </div>
     </section>
 
     <section id="endScreen" class="hidden">
-      <h2>🎉 通关成功！</h2>
+      <h2>🎉 通关成功</h2>
       <p id="finalText"></p>
-      <p>你真棒！再来一次吧～</p>
+      <p>你太棒了，再来一次吧。</p>
       <div class="center" style="margin-top:14px;">
         <button id="restartBtn" class="btn">再玩一次</button>
       </div>
     </section>
   </div>
 
-<script>
-(() => {
-  const STORAGE_KEY = "kids_maze_save_v1";
-  const DEFAULT_SAVE = {
-    bestLevel: 0,
-    totalPlays: 0,
-    totalWins: 0,
-    allTimeSteps: 0,
-    allTimeMarkers: 0
-  };
+  <script>
+    (() => {
+      const STORAGE_KEY = "kids_maze_save_v1";
+      const LEVEL_TOTAL = 50;
+      const LEVEL_COMPLETE_VOICE_TEXT = "过关啦，毛毛真棒，下一关见！";
+      const MARKER_ICON = "⭐";
+      const GOAL_ICON = "🏁";
+      const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+      const DEFAULT_SAVE = {
+        bestLevel: 0,
+        totalPlays: 0,
+        totalWins: 0,
+        allTimeSteps: 0,
+        allTimeMarkers: 0
+      };
+      const characters = ["🐰", "🐱", "🐶", "🦊", "🐼", "🐻", "🐯", "🦁", "🐨", "🐷", "🐸", "🐵", "🐹", "🐮", "🦄", "🐙", "🐧", "🐤", "🦖", "🐳"];
 
-  const characters = ["🐰","🐱","🐶","🐼","🦊","🐸","🐨","🦁","🐯","🐮","🐵","🐤","🐧","🦄","🐙","🦕","🐢","🦉","🐷","🐺"];
-
-  function shuffle(arr) {
-    const copy = arr.slice();
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
-  }
-
-  function randInt(min, max) {
-    return min + Math.floor(Math.random() * (max - min + 1));
-  }
-
-  function cloneGrid(grid) {
-    return grid.map(row => row.slice());
-  }
-
-  function countSimplePaths(grid, start, goal, limit = 2) {
-    const h = grid.length;
-    const w = grid[0].length;
-    const visited = Array.from({ length: h }, () => Array(w).fill(false));
-    let count = 0;
-
-    function walk(x, y) {
-      if (count >= limit) return;
-      if (x === goal.x && y === goal.y) {
-        count += 1;
-        return;
+      function shuffle(arr) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
       }
 
-      visited[y][x] = true;
-      const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
-      for (const [dx, dy] of dirs) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
-        if (visited[ny][nx]) continue;
-        if (grid[ny][nx] === "#") continue;
-        walk(nx, ny);
-      }
-      visited[y][x] = false;
-    }
-
-    walk(start.x, start.y);
-    return count;
-  }
-
-  function buildClassicLevel(levelIndex) {
-    const tier = Math.floor(levelIndex / 5);
-    const size = 9 + tier * 2;
-    const grid = Array.from({ length: size }, () => Array(size).fill("#"));
-
-    function carve(x, y) {
-      grid[y][x] = ".";
-      const dirs = shuffle([[2,0],[-2,0],[0,2],[0,-2]]);
-      for (const [dx, dy] of dirs) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
-        if (grid[ny][nx] !== "#") continue;
-        grid[y + dy / 2][x + dx / 2] = ".";
-        carve(nx, ny);
-      }
-    }
-
-    carve(1, 1);
-    grid[1][1] = "S";
-    grid[size - 2][size - 2] = "G";
-    return grid.map(row => row.join(""));
-  }
-
-  function placeLoopAtAnchor(grid, ax, ay) {
-    const patterns = [
-      [[1,0],[2,-1],[2,0],[2,1],[3,-1],[3,1],[4,-1],[4,0],[4,1]],
-      [[-1,0],[-2,-1],[-2,0],[-2,1],[-3,-1],[-3,1],[-4,-1],[-4,0],[-4,1]],
-      [[0,1],[-1,2],[0,2],[1,2],[-1,3],[1,3],[-1,4],[0,4],[1,4]],
-      [[0,-1],[-1,-2],[0,-2],[1,-2],[-1,-3],[1,-3],[-1,-4],[0,-4],[1,-4]]
-    ];
-
-    for (const rels of shuffle(patterns)) {
-      const cells = rels.map(([dx, dy]) => [ax + dx, ay + dy]);
-      const ok = cells.every(([x, y]) => y > 0 && x > 0 && y < grid.length - 1 && x < grid[0].length - 1 && grid[y][x] === "#");
-      if (!ok) continue;
-      cells.forEach(([x, y]) => { grid[y][x] = "."; });
-      return true;
-    }
-    return false;
-  }
-
-  function growDeadBranch(grid, sx, sy, used, maxLen) {
-    let x = sx;
-    let y = sy;
-    let len = 0;
-
-    const dirs = shuffle([[1,0],[-1,0],[0,1],[0,-1]]);
-    for (const [dx, dy] of dirs) {
-      const nx = x + dx;
-      const ny = y + dy;
-      if (ny <= 0 || nx <= 0 || ny >= grid.length - 1 || nx >= grid[0].length - 1) continue;
-      if (grid[ny][nx] !== "#") continue;
-
-      while (len < maxLen) {
-        const tx = x + dx;
-        const ty = y + dy;
-        if (ty <= 0 || tx <= 0 || ty >= grid.length - 1 || tx >= grid[0].length - 1) break;
-        if (grid[ty][tx] !== "#") break;
-
-        grid[ty][tx] = ".";
-        used.add(`${tx},${ty}`);
-        x = tx;
-        y = ty;
-        len += 1;
-
-        if (Math.random() < 0.3) break;
-      }
-      break;
-    }
-  }
-
-  function buildLoopBranchLevel(levelIndex) {
-    const tier = Math.floor((levelIndex - 10) / 5);
-    const size = 13 + tier * 2;
-    const start = { x: 1, y: 1 };
-    const goal = { x: size - 2, y: size - 2 };
-
-    for (let attempt = 0; attempt < 80; attempt++) {
-      const grid = Array.from({ length: size }, () => Array(size).fill("#"));
-      const path = [[start.x, start.y]];
-      const used = new Set([`${start.x},${start.y}`]);
-
-      let x = start.x;
-      let y = start.y;
-      while (x < goal.x || y < goal.y) {
-        const options = [];
-        if (x < goal.x) options.push([1, 0]);
-        if (y < goal.y) options.push([0, 1]);
-        const [dx, dy] = options[Math.floor(Math.random() * options.length)];
-        x += dx;
-        y += dy;
-        path.push([x, y]);
-        used.add(`${x},${y}`);
+      function randInt(min, max) {
+        return min + Math.floor(Math.random() * (max - min + 1));
       }
 
-      path.forEach(([px, py]) => { grid[py][px] = "."; });
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
 
-      const middleAnchors = path.slice(2, -3);
-      let loopPlaced = false;
-      for (const [ax, ay] of shuffle(middleAnchors)) {
-        if (placeLoopAtAnchor(grid, ax, ay)) {
-          loopPlaced = true;
+      function cloneGrid(grid) {
+        return grid.map(row => row.slice());
+      }
+
+      function keyOf(x, y) {
+        return `${x},${y}`;
+      }
+
+      function parseKey(key) {
+        const [x, y] = key.split(",").map(Number);
+        return { x, y };
+      }
+
+      function inBounds(grid, x, y) {
+        return y >= 0 && x >= 0 && y < grid.length && x < grid[0].length;
+      }
+
+      function inInnerBounds(grid, x, y) {
+        return y > 0 && x > 0 && y < grid.length - 1 && x < grid[0].length - 1;
+      }
+
+      function isWalkable(grid, x, y) {
+        return inBounds(grid, x, y) && grid[y][x] !== "#";
+      }
+
+      function getOpenNeighbors(grid, x, y, blocked = null) {
+        const list = [];
+        for (const [dx, dy] of DIRECTIONS) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (!isWalkable(grid, nx, ny)) continue;
+          if (blocked && blocked.has(keyOf(nx, ny))) continue;
+          list.push({ x: nx, y: ny });
+        }
+        return list;
+      }
+
+      function countSimplePaths(grid, start, goal, limit = 2) {
+        const h = grid.length;
+        const w = grid[0].length;
+        const visited = Array.from({ length: h }, () => Array(w).fill(false));
+        let count = 0;
+
+        function walk(x, y) {
+          if (count >= limit) return;
+          if (x === goal.x && y === goal.y) {
+            count += 1;
+            return;
+          }
+
+          visited[y][x] = true;
+          for (const [dx, dy] of DIRECTIONS) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+            if (visited[ny][nx]) continue;
+            if (grid[ny][nx] === "#") continue;
+            walk(nx, ny);
+          }
+          visited[y][x] = false;
+        }
+
+        walk(start.x, start.y);
+        return count;
+      }
+
+      function buildClassicLevel(levelIndex) {
+        const tier = Math.floor(levelIndex / 5);
+        const size = 9 + tier * 2;
+        const start = { x: 1, y: 1 };
+        const goal = { x: size - 2, y: size - 2 };
+
+        for (let attempt = 0; attempt < 24; attempt++) {
+          const grid = Array.from({ length: size }, () => Array(size).fill("#"));
+
+          function carve(x, y) {
+            grid[y][x] = ".";
+            for (const [dx, dy] of shuffle([[2, 0], [-2, 0], [0, 2], [0, -2]])) {
+              const nx = x + dx;
+              const ny = y + dy;
+              if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
+              if (grid[ny][nx] !== "#") continue;
+              grid[y + dy / 2][x + dx / 2] = ".";
+              carve(nx, ny);
+            }
+          }
+
+          carve(start.x, start.y);
+          const detourAnchors = [];
+          for (let y = 2; y < size - 2; y++) {
+            for (let x = 2; x < size - 2; x++) {
+              if (grid[y][x] === ".") detourAnchors.push([x, y]);
+            }
+          }
+          const detourCount = Math.min(detourAnchors.length, 4 + tier * 3);
+          const detourOptions = shuffle(detourAnchors);
+          for (let i = 0; i < detourCount; i++) {
+            const [dx, dy] = detourOptions[i];
+            growDeadBranch(grid, dx, dy, randInt(3, 5 + tier));
+          }
+
+          grid[start.y][start.x] = "S";
+          grid[goal.y][goal.x] = "G";
+          if (countSimplePaths(grid, start, goal, 2) === 1) {
+            return grid.map(row => row.join(""));
+          }
+        }
+
+        const fallback = Array.from({ length: size }, () => Array(size).fill("#"));
+        (function carveFallback(x, y) {
+          fallback[y][x] = ".";
+          for (const [dx, dy] of shuffle([[2, 0], [-2, 0], [0, 2], [0, -2]])) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
+            if (fallback[ny][nx] !== "#") continue;
+            fallback[y + dy / 2][x + dx / 2] = ".";
+            carveFallback(nx, ny);
+          }
+        })(start.x, start.y);
+        fallback[start.y][start.x] = "S";
+        fallback[goal.y][goal.x] = "G";
+        return fallback.map(row => row.join(""));
+      }
+
+      function placeLoopAtAnchor(grid, ax, ay) {
+        const patterns = [
+          [[1, 0], [2, -1], [2, 0], [2, 1], [3, -1], [3, 1], [4, -1], [4, 0], [4, 1]],
+          [[-1, 0], [-2, -1], [-2, 0], [-2, 1], [-3, -1], [-3, 1], [-4, -1], [-4, 0], [-4, 1]],
+          [[0, 1], [-1, 2], [0, 2], [1, 2], [-1, 3], [1, 3], [-1, 4], [0, 4], [1, 4]],
+          [[0, -1], [-1, -2], [0, -2], [1, -2], [-1, -3], [1, -3], [-1, -4], [0, -4], [1, -4]]
+        ];
+
+        for (const rels of shuffle(patterns)) {
+          const cells = rels.map(([dx, dy]) => [ax + dx, ay + dy]);
+          const ok = cells.every(([x, y]) => inInnerBounds(grid, x, y) && grid[y][x] === "#");
+          if (!ok) continue;
+          cells.forEach(([x, y]) => { grid[y][x] = "."; });
+          return true;
+        }
+
+        return false;
+      }
+
+      function growDeadBranch(grid, sx, sy, maxLen) {
+        let x = sx;
+        let y = sy;
+        let len = 0;
+
+        for (const [dx, dy] of shuffle(DIRECTIONS)) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (!inInnerBounds(grid, nx, ny)) continue;
+          if (grid[ny][nx] !== "#") continue;
+
+          while (len < maxLen) {
+            const tx = x + dx;
+            const ty = y + dy;
+            if (!inInnerBounds(grid, tx, ty)) break;
+            if (grid[ty][tx] !== "#") break;
+            const openNeighbors = [];
+            for (const [ndx, ndy] of DIRECTIONS) {
+              const nx2 = tx + ndx;
+              const ny2 = ty + ndy;
+              if (isWalkable(grid, nx2, ny2)) openNeighbors.push(keyOf(nx2, ny2));
+            }
+            if (openNeighbors.length !== 1 || openNeighbors[0] !== keyOf(x, y)) break;
+
+            grid[ty][tx] = ".";
+            x = tx;
+            y = ty;
+            len += 1;
+            if (Math.random() < 0.18) break;
+          }
           break;
         }
       }
-      if (!loopPlaced) continue;
 
-      const branchCount = 6 + tier * 2;
-      for (let i = 0; i < branchCount; i++) {
-        const [bx, by] = middleAnchors[Math.floor(Math.random() * middleAnchors.length)] || [2,2];
-        growDeadBranch(grid, bx, by, used, randInt(2, 4 + tier));
+      function buildLoopBranchLevel(levelIndex) {
+        const tier = Math.floor((levelIndex - 10) / 5);
+        const size = 13 + tier * 2;
+        const start = { x: 1, y: 1 };
+        const goal = { x: size - 2, y: size - 2 };
+
+        for (let attempt = 0; attempt < 80; attempt++) {
+          const grid = Array.from({ length: size }, () => Array(size).fill("#"));
+          const path = [[start.x, start.y]];
+
+          let x = start.x;
+          let y = start.y;
+          while (x < goal.x || y < goal.y) {
+            const options = [];
+            if (x < goal.x) options.push([1, 0]);
+            if (y < goal.y) options.push([0, 1]);
+            const [dx, dy] = options[Math.floor(Math.random() * options.length)];
+            x += dx;
+            y += dy;
+            path.push([x, y]);
+          }
+
+          path.forEach(([px, py]) => { grid[py][px] = "."; });
+
+          const middleAnchors = path.slice(2, -3);
+          let loopPlaced = false;
+          for (const [ax, ay] of shuffle(middleAnchors)) {
+            if (placeLoopAtAnchor(grid, ax, ay)) {
+              loopPlaced = true;
+              break;
+            }
+          }
+          if (!loopPlaced) continue;
+
+          const branchCount = 6 + tier * 2;
+          for (let i = 0; i < branchCount; i++) {
+            const [bx, by] = middleAnchors[Math.floor(Math.random() * middleAnchors.length)] || [2, 2];
+            growDeadBranch(grid, bx, by, randInt(2, 4 + tier));
+          }
+
+          grid[start.y][start.x] = "S";
+          grid[goal.y][goal.x] = "G";
+
+          if (countSimplePaths(grid, start, goal, 2) === 1) {
+            return grid.map(row => row.join(""));
+          }
+        }
+
+        return buildClassicLevel(levelIndex);
       }
 
-      grid[start.y][start.x] = "S";
-      grid[goal.y][goal.x] = "G";
+      function buildPictureLevel1() {
+        const n = 19;
+        const grid = Array.from({ length: n }, () => Array(n).fill("#"));
+        const points = [
+          [15, 1], [3, 1], [3, 15], [15, 15], [15, 3],
+          [5, 3], [5, 13], [13, 13], [13, 5], [7, 5],
+          [7, 11], [11, 11], [11, 7], [9, 7], [9, 9]
+        ];
 
-      const pathCount = countSimplePaths(grid, start, goal, 2);
-      if (pathCount === 1) return grid.map(row => row.join(""));
-    }
+        function carveLine(x1, y1, x2, y2) {
+          const dx = Math.sign(x2 - x1);
+          const dy = Math.sign(y2 - y1);
+          let x = x1;
+          let y = y1;
+          grid[y][x] = ".";
+          while (x !== x2 || y !== y2) {
+            x += dx;
+            y += dy;
+            grid[y][x] = ".";
+          }
+        }
 
-    return buildClassicLevel(levelIndex);
-  }
+        for (let i = 0; i < points.length - 1; i++) {
+          carveLine(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1]);
+        }
 
-  function buildPictureLevel1() {
-    const n = 19;
-    const grid = Array.from({ length: n }, () => Array(n).fill("#"));
-
-    const points = [
-      [15, 1], [3, 1], [3, 15], [15, 15], [15, 3],
-      [5, 3], [5, 13], [13, 13], [13, 5], [7, 5],
-      [7, 11], [11, 11], [11, 7], [9, 7], [9, 9]
-    ];
-
-    function carveLine(x1, y1, x2, y2) {
-      const dx = Math.sign(x2 - x1);
-      const dy = Math.sign(y2 - y1);
-      let x = x1, y = y1;
-      grid[y][x] = ".";
-      while (x !== x2 || y !== y2) {
-        x += dx;
-        y += dy;
-        grid[y][x] = ".";
+        grid[1][15] = "S";
+        grid[9][9] = "G";
+        return grid.map(row => row.join(""));
       }
-    }
 
-    for (let i = 0; i < points.length - 1; i++) {
-      const [x1, y1] = points[i];
-      const [x2, y2] = points[i + 1];
-      carveLine(x1, y1, x2, y2);
-    }
-
-    grid[1][15] = "S"; // 右上外圈入口，贴近参考图小人位置
-    grid[9][9] = "G";  // 中心终点，贴近参考图中心箭头
-
-    return grid.map(row => row.join(""));
-  }
-
-  function buildLevels(total = 50) {
-    const result = [];
-    for (let i = 0; i < total; i++) {
-      if (i === 0) result.push(buildPictureLevel1());
-      else if (i >= 10) result.push(buildLoopBranchLevel(i));
-      else result.push(buildClassicLevel(i));
-    }
-    return result;
-  }
-
-  function loadSave() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return { ...DEFAULT_SAVE };
-      const obj = JSON.parse(raw);
-      return { ...DEFAULT_SAVE, ...obj };
-    } catch {
-      return { ...DEFAULT_SAVE };
-    }
-  }
-
-  const levels = buildLevels(50);
-
-  const state = {
-    levelIndex: 0,
-    grid: [],
-    rows: 0,
-    cols: 0,
-    player: { x: 0, y: 0 },
-    goal: { x: 0, y: 0 },
-    markersLeft: 5,
-    markers: new Set(),
-    stepsInLevel: 0,
-    totalSteps: 0,
-    totalMarkersUsed: 0,
-    currentCharacter: "🐰",
-    save: loadSave()
-  };
-
-  const $ = (id) => document.getElementById(id);
-  const startScreen = $("startScreen");
-  const settingsScreen = $("settingsScreen");
-  const gameScreen = $("gameScreen");
-  const endScreen = $("endScreen");
-  const mazeEl = $("maze");
-  const levelTitle = $("levelTitle");
-  const levelInfo = $("levelInfo");
-  const stepsInfo = $("stepsInfo");
-  const markerInfo = $("markerInfo");
-  const charInfo = $("charInfo");
-  const bestInfo = $("bestInfo");
-  const finalText = $("finalText");
-  const saveInfo = $("saveInfo");
-  const settingsStats = $("settingsStats");
-
-  function saveLocal() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.save));
-    refreshSaveInfo();
-  }
-
-  function refreshSaveInfo() {
-    saveInfo.textContent = `本地记录：最高到第 ${state.save.bestLevel} 关，累计游玩 ${state.save.totalPlays} 次`;
-    settingsStats.textContent = `最高关卡：${state.save.bestLevel} ｜ 通关次数：${state.save.totalWins} ｜ 累计步数：${state.save.allTimeSteps} ｜ 累计标记：${state.save.allTimeMarkers}`;
-  }
-
-  function pickCharacter() {
-    state.currentCharacter = characters[Math.floor(Math.random() * characters.length)];
-  }
-
-  function parseLevel(raw) {
-    state.grid = raw.map(row => row.split(""));
-    state.rows = state.grid.length;
-    state.cols = state.grid[0].length;
-    for (let y = 0; y < state.rows; y++) {
-      for (let x = 0; x < state.cols; x++) {
-        const c = state.grid[y][x];
-        if (c === "S") state.player = { x, y };
-        if (c === "G") state.goal = { x, y };
+      function makeOddGrid(size) {
+        return Array.from({ length: size }, () => Array(size).fill("#"));
       }
-    }
-    state.markersLeft = 5;
-    state.markers = new Set();
-    state.stepsInLevel = 0;
-    pickCharacter();
-  }
 
-  function updateHud() {
-    levelTitle.textContent = `第 ${state.levelIndex + 1} 关`;
-    levelInfo.textContent = `关卡：${state.levelIndex + 1} / ${levels.length}`;
-    stepsInfo.textContent = `步数：${state.stepsInLevel}`;
-    markerInfo.textContent = `⭐标记剩余：${state.markersLeft}`;
-    charInfo.textContent = `角色：${state.currentCharacter}`;
-    bestInfo.textContent = `历史最高：${state.save.bestLevel}`;
-  }
-
-  function cellType(x, y) {
-    const c = state.grid[y][x];
-    if (c === "#") return "wall";
-    if (c === "G") return "goal";
-    return "path";
-  }
-
-  function updateCellSize() {
-    const w = Math.max(window.innerWidth - 90, 280);
-    const h = Math.max(window.innerHeight - 360, 220);
-    const byWidth = Math.floor(w / state.cols);
-    const byHeight = Math.floor(h / state.rows);
-    const cell = Math.max(22, Math.min(56, byWidth, byHeight));
-    mazeEl.style.setProperty("--cell", `${cell}px`);
-  }
-
-  function render() {
-    mazeEl.style.setProperty("--rows", state.rows);
-    mazeEl.style.setProperty("--cols", state.cols);
-    updateCellSize();
-    mazeEl.innerHTML = "";
-
-    for (let y = 0; y < state.rows; y++) {
-      for (let x = 0; x < state.cols; x++) {
-        const div = document.createElement("div");
-        div.className = `cell ${cellType(x, y)}`;
-
-        const key = `${x},${y}`;
-        if (state.markers.has(key)) div.textContent = "⭐";
-        if (x === state.goal.x && y === state.goal.y) div.textContent = "🏠";
-        if (x === state.player.x && y === state.player.y) div.textContent = state.currentCharacter;
-
-        mazeEl.appendChild(div);
+      function getStepTwoNeighbors(x, y, size) {
+        const neighbors = [];
+        for (const [dx, dy] of [[2, 0], [-2, 0], [0, 2], [0, -2]]) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
+          neighbors.push({ x: nx, y: ny });
+        }
+        return neighbors;
       }
-    }
 
-    updateHud();
-  }
+      function carveBetween(grid, from, to) {
+        grid[from.y][from.x] = ".";
+        grid[(from.y + to.y) / 2][(from.x + to.x) / 2] = ".";
+        grid[to.y][to.x] = ".";
+      }
 
-  function canWalk(x, y) {
-    if (x < 0 || y < 0 || x >= state.cols || y >= state.rows) return false;
-    return state.grid[y][x] !== "#";
-  }
+      function pickRandomOddCell(size) {
+        const count = Math.floor(size / 2);
+        return {
+          x: 1 + randInt(0, count - 1) * 2,
+          y: 1 + randInt(0, count - 1) * 2
+        };
+      }
 
-  function move(dx, dy) {
-    const nx = state.player.x + dx;
-    const ny = state.player.y + dy;
-    if (!canWalk(nx, ny)) return;
+      function buildRecursiveBacktrackerMaze(size) {
+        const grid = makeOddGrid(size);
+        const stack = [{ x: 1, y: 1 }];
+        const visited = new Set([keyOf(1, 1)]);
+        grid[1][1] = ".";
 
-    state.player = { x: nx, y: ny };
-    state.stepsInLevel += 1;
-    state.totalSteps += 1;
-    render();
+        while (stack.length) {
+          const current = stack[stack.length - 1];
+          const candidates = shuffle(getStepTwoNeighbors(current.x, current.y, size)).filter(next => {
+            return !visited.has(keyOf(next.x, next.y));
+          });
 
-    if (nx === state.goal.x && ny === state.goal.y) {
-      setTimeout(nextLevel, 180);
-    }
-  }
+          if (!candidates.length) {
+            stack.pop();
+            continue;
+          }
 
-  function placeMarker() {
-    const key = `${state.player.x},${state.player.y}`;
-    if (state.markers.has(key)) return;
-    if (state.markersLeft <= 0) return;
+          const next = candidates[0];
+          carveBetween(grid, current, next);
+          visited.add(keyOf(next.x, next.y));
+          stack.push(next);
+        }
 
-    state.markers.add(key);
-    state.markersLeft -= 1;
-    state.totalMarkersUsed += 1;
-    render();
-  }
+        return grid;
+      }
 
-  function nextLevel() {
-    const reachedLevel = state.levelIndex + 1;
-    if (reachedLevel > state.save.bestLevel) {
-      state.save.bestLevel = reachedLevel;
-      saveLocal();
-    }
+      function buildHuntKillMaze(size) {
+        const grid = makeOddGrid(size);
+        const visited = new Set();
+        let current = pickRandomOddCell(size);
+        visited.add(keyOf(current.x, current.y));
+        grid[current.y][current.x] = ".";
 
-    state.levelIndex += 1;
-    if (state.levelIndex >= levels.length) {
-      showEnd();
-      return;
-    }
-    parseLevel(levels[state.levelIndex]);
-    render();
-  }
+        while (current) {
+          const unvisitedNeighbors = shuffle(getStepTwoNeighbors(current.x, current.y, size)).filter(next => {
+            return !visited.has(keyOf(next.x, next.y));
+          });
 
-  function startGame() {
-    state.levelIndex = 0;
-    state.totalSteps = 0;
-    state.totalMarkersUsed = 0;
+          if (unvisitedNeighbors.length) {
+            const next = unvisitedNeighbors[0];
+            carveBetween(grid, current, next);
+            visited.add(keyOf(next.x, next.y));
+            current = next;
+            continue;
+          }
 
-    state.save.totalPlays += 1;
-    saveLocal();
+          current = null;
+          for (let y = 1; y < size - 1 && !current; y += 2) {
+            for (let x = 1; x < size - 1; x += 2) {
+              const key = keyOf(x, y);
+              if (visited.has(key)) continue;
+              const visitedNeighbors = shuffle(getStepTwoNeighbors(x, y, size)).filter(next => {
+                return visited.has(keyOf(next.x, next.y));
+              });
+              if (!visitedNeighbors.length) continue;
+              current = { x, y };
+              const attach = visitedNeighbors[0];
+              carveBetween(grid, current, attach);
+              visited.add(key);
+              break;
+            }
+          }
+        }
 
-    parseLevel(levels[state.levelIndex]);
-    startScreen.classList.add("hidden");
-    settingsScreen.classList.add("hidden");
-    endScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    render();
-  }
+        return grid;
+      }
 
-  function showEnd() {
-    gameScreen.classList.add("hidden");
-    endScreen.classList.remove("hidden");
+      function buildPrimMaze(size) {
+        const grid = makeOddGrid(size);
+        const start = pickRandomOddCell(size);
+        const visited = new Set([keyOf(start.x, start.y)]);
+        const frontier = [];
+        grid[start.y][start.x] = ".";
 
-    state.save.totalWins += 1;
-    state.save.allTimeSteps += state.totalSteps;
-    state.save.allTimeMarkers += state.totalMarkersUsed;
-    if (levels.length > state.save.bestLevel) state.save.bestLevel = levels.length;
-    saveLocal();
+        function pushFrontier(from) {
+          for (const next of getStepTwoNeighbors(from.x, from.y, size)) {
+            const nextKey = keyOf(next.x, next.y);
+            if (visited.has(nextKey)) continue;
+            frontier.push({ from, to: next });
+          }
+        }
 
-    finalText.textContent = `你完成了 ${levels.length} 关！共走了 ${state.totalSteps} 步，用了 ${state.totalMarkersUsed} 个⭐标记。`;
-  }
+        pushFrontier(start);
+        while (frontier.length) {
+          const index = randInt(0, frontier.length - 1);
+          const edge = frontier.splice(index, 1)[0];
+          const nextKey = keyOf(edge.to.x, edge.to.y);
+          if (visited.has(nextKey)) continue;
+          carveBetween(grid, edge.from, edge.to);
+          visited.add(nextKey);
+          pushFrontier(edge.to);
+        }
 
-  function openSettings() {
-    startScreen.classList.add("hidden");
-    endScreen.classList.add("hidden");
-    gameScreen.classList.add("hidden");
-    settingsScreen.classList.remove("hidden");
-    refreshSaveInfo();
-  }
+        return grid;
+      }
 
-  function backToStart() {
-    settingsScreen.classList.add("hidden");
-    gameScreen.classList.add("hidden");
-    endScreen.classList.add("hidden");
-    startScreen.classList.remove("hidden");
-    refreshSaveInfo();
-  }
+      function pickGrowingTreeIndex(active) {
+        const roll = Math.random();
+        if (roll < 0.5) return active.length - 1;
+        if (roll < 0.85) return randInt(0, active.length - 1);
+        return 0;
+      }
 
-  function resetData() {
-    const ok = confirm("确定要重置本地数据吗？\n（最高关卡、累计步数都会清空）");
-    if (!ok) return;
+      function buildGrowingTreeMaze(size) {
+        const grid = makeOddGrid(size);
+        const start = pickRandomOddCell(size);
+        const active = [start];
+        const visited = new Set([keyOf(start.x, start.y)]);
+        grid[start.y][start.x] = ".";
 
-    state.save = { ...DEFAULT_SAVE };
-    localStorage.removeItem(STORAGE_KEY);
-    saveLocal();
-    alert("本地数据已重置 ✅");
-    backToStart();
-  }
+        while (active.length) {
+          const index = pickGrowingTreeIndex(active);
+          const current = active[index];
+          const unvisitedNeighbors = shuffle(getStepTwoNeighbors(current.x, current.y, size)).filter(next => {
+            return !visited.has(keyOf(next.x, next.y));
+          });
 
-  document.querySelectorAll(".move[data-dir]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const dir = btn.dataset.dir;
-      if (dir === "up") move(0, -1);
-      if (dir === "down") move(0, 1);
-      if (dir === "left") move(-1, 0);
-      if (dir === "right") move(1, 0);
-    });
-  });
+          if (!unvisitedNeighbors.length) {
+            active.splice(index, 1);
+            continue;
+          }
 
-  document.addEventListener("keydown", (e) => {
-    const key = e.key;
-    if (gameScreen.classList.contains("hidden")) return;
-    if (key === "ArrowUp") { e.preventDefault(); move(0, -1); }
-    if (key === "ArrowDown") { e.preventDefault(); move(0, 1); }
-    if (key === "ArrowLeft") { e.preventDefault(); move(-1, 0); }
-    if (key === "ArrowRight") { e.preventDefault(); move(1, 0); }
-    if (key.toLowerCase() === "m" || key === " ") { e.preventDefault(); placeMarker(); }
-  });
+          const next = unvisitedNeighbors[0];
+          carveBetween(grid, current, next);
+          visited.add(keyOf(next.x, next.y));
+          active.push(next);
+        }
 
-  window.addEventListener("resize", () => {
-    if (!gameScreen.classList.contains("hidden")) render();
-  });
+        return grid;
+      }
 
-  $("startBtn").addEventListener("click", startGame);
-  $("restartBtn").addEventListener("click", startGame);
-  $("markBtn").addEventListener("click", placeMarker);
-  $("openSettingsBtn").addEventListener("click", openSettings);
-  $("backFromSettingsBtn").addEventListener("click", backToStart);
-  $("resetDataBtn").addEventListener("click", resetData);
+      function finalizePerfectMaze(grid) {
+        const endpoints = findMazeEndpoints(grid);
+        return serializeLevel(grid, endpoints.start, endpoints.goal);
+      }
 
-  window.__mazeDebug = { levels };
-  refreshSaveInfo();
-})();
-</script>
+      function getAlgorithmLevelProfile(levelIndex) {
+        const level = levelIndex + 1;
+        const sizeBoost = level >= 6 && level <= 15 ? 2 : 0;
+        const size = 11 + Math.floor(levelIndex / 5) * 2 + sizeBoost;
+
+        if (level <= 10) {
+          return {
+            algorithm: "recursive_backtracker",
+            size
+          };
+        }
+        if (level < 20) {
+          return {
+            algorithm: "hunt_kill",
+            size
+          };
+        }
+        if (level < 35) {
+          return {
+            algorithm: "prim",
+            size
+          };
+        }
+        return {
+          algorithm: "growing_tree",
+          size
+        };
+      }
+
+      function createPerfectMaze(size) {
+        const grid = Array.from({ length: size }, () => Array(size).fill("#"));
+
+        function carve(x, y) {
+          grid[y][x] = ".";
+          for (const [dx, dy] of shuffle([[2, 0], [-2, 0], [0, 2], [0, -2]])) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx <= 0 || ny <= 0 || nx >= size - 1 || ny >= size - 1) continue;
+            if (grid[ny][nx] !== "#") continue;
+            grid[y + dy / 2][x + dx / 2] = ".";
+            carve(nx, ny);
+          }
+        }
+
+        carve(1, 1);
+        return grid;
+      }
+
+      function findFirstOpenCell(grid) {
+        for (let y = 0; y < grid.length; y++) {
+          for (let x = 0; x < grid[0].length; x++) {
+            if (grid[y][x] !== "#") return { x, y };
+          }
+        }
+        return { x: 1, y: 1 };
+      }
+
+      function bfsGraph(grid, start, blocked = null) {
+        const startKey = keyOf(start.x, start.y);
+        const queue = [start];
+        const parents = new Map([[startKey, null]]);
+        const distances = new Map([[startKey, 0]]);
+        let pointer = 0;
+        let farthest = start;
+
+        while (pointer < queue.length) {
+          const cell = queue[pointer++];
+          const cellKey = keyOf(cell.x, cell.y);
+          const cellDist = distances.get(cellKey);
+          const farthestDist = distances.get(keyOf(farthest.x, farthest.y));
+          if (cellDist > farthestDist) farthest = cell;
+
+          for (const next of getOpenNeighbors(grid, cell.x, cell.y, blocked)) {
+            const nextKey = keyOf(next.x, next.y);
+            if (distances.has(nextKey)) continue;
+            distances.set(nextKey, cellDist + 1);
+            parents.set(nextKey, cellKey);
+            queue.push(next);
+          }
+        }
+
+        return { parents, distances, farthest };
+      }
+
+      function tracePath(parents, endKey) {
+        const path = [];
+        let cursor = endKey;
+        while (cursor) {
+          path.push(parseKey(cursor));
+          cursor = parents.get(cursor) || null;
+        }
+        return path.reverse();
+      }
+
+      function findMazeEndpoints(grid) {
+        const seed = findFirstOpenCell(grid);
+        const first = bfsGraph(grid, seed);
+        const second = bfsGraph(grid, first.farthest);
+        const goalKey = keyOf(second.farthest.x, second.farthest.y);
+        return {
+          start: first.farthest,
+          goal: second.farthest,
+          path: tracePath(second.parents, goalKey)
+        };
+      }
+
+      function getDirectionPreference(anchor, target) {
+        const dx = target.x - anchor.x;
+        const dy = target.y - anchor.y;
+        const preferred = [];
+        if (Math.abs(dx) >= Math.abs(dy) && dx !== 0) preferred.push([Math.sign(dx), 0]);
+        if (Math.abs(dy) >= Math.abs(dx) && dy !== 0) preferred.push([0, Math.sign(dy)]);
+        if (Math.abs(dx) < Math.abs(dy) && dx !== 0) preferred.push([Math.sign(dx), 0]);
+        if (Math.abs(dy) < Math.abs(dx) && dy !== 0) preferred.push([0, Math.sign(dy)]);
+        return preferred;
+      }
+
+      function canCarveAt(grid, x, y, from) {
+        if (!inInnerBounds(grid, x, y)) return false;
+        if (grid[y][x] !== "#") return false;
+
+        const openNeighbors = [];
+        for (const [dx, dy] of DIRECTIONS) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (isWalkable(grid, nx, ny)) openNeighbors.push(keyOf(nx, ny));
+        }
+
+        return openNeighbors.length === 1 && openNeighbors[0] === keyOf(from.x, from.y);
+      }
+
+      function orderDirections(preferredDirs, lastDir) {
+        const ordered = [];
+        const seen = new Set();
+
+        function push(dir) {
+          if (!dir) return;
+          const dirKey = `${dir[0]},${dir[1]}`;
+          if (seen.has(dirKey)) return;
+          seen.add(dirKey);
+          ordered.push(dir);
+        }
+
+        preferredDirs.forEach(push);
+        push(lastDir);
+        shuffle(DIRECTIONS).forEach(push);
+        return ordered;
+      }
+
+      function carveBranch(grid, anchor, options = {}) {
+        const minLen = options.minLen ?? 2;
+        const maxLen = options.maxLen ?? 6;
+        const stopChance = options.stopChance ?? 0.35;
+        const preferredDirs = options.preferredDirs ?? [];
+        const carved = [];
+        let current = { x: anchor.x, y: anchor.y };
+        let lastDir = null;
+
+        while (carved.length < maxLen) {
+          let moved = false;
+          for (const [dx, dy] of orderDirections(preferredDirs, lastDir)) {
+            const nx = current.x + dx;
+            const ny = current.y + dy;
+            if (!canCarveAt(grid, nx, ny, current)) continue;
+            grid[ny][nx] = ".";
+            carved.push({ x: nx, y: ny });
+            current = { x: nx, y: ny };
+            lastDir = [dx, dy];
+            moved = true;
+            break;
+          }
+
+          if (!moved) break;
+          if (carved.length >= minLen && Math.random() < stopChance) break;
+        }
+
+        if (carved.length < minLen) {
+          carved.forEach(cell => { grid[cell.y][cell.x] = "#"; });
+          return [];
+        }
+
+        return carved;
+      }
+
+      function attachSingleEntryLoop(grid, anchor) {
+        const patterns = [
+          [[1, 0], [1, -1], [2, -1], [3, -1], [3, 0], [3, 1], [2, 1], [1, 1]],
+          [[-1, 0], [-1, -1], [-2, -1], [-3, -1], [-3, 0], [-3, 1], [-2, 1], [-1, 1]],
+          [[0, 1], [-1, 1], [-1, 2], [-1, 3], [0, 3], [1, 3], [1, 2], [1, 1]],
+          [[0, -1], [-1, -1], [-1, -2], [-1, -3], [0, -3], [1, -3], [1, -2], [1, -1]]
+        ];
+
+        for (const rels of shuffle(patterns)) {
+          const cells = rels.map(([dx, dy]) => ({ x: anchor.x + dx, y: anchor.y + dy }));
+          const valid = cells.every((cell, index) => {
+            if (!inInnerBounds(grid, cell.x, cell.y)) return false;
+            if (grid[cell.y][cell.x] !== "#") return false;
+            const openNeighbors = getOpenNeighbors(grid, cell.x, cell.y);
+            if (index === 0) {
+              return openNeighbors.length === 1 && openNeighbors[0].x === anchor.x && openNeighbors[0].y === anchor.y;
+            }
+            return openNeighbors.length === 0;
+          });
+
+          if (!valid) continue;
+          cells.forEach(cell => { grid[cell.y][cell.x] = "."; });
+          return true;
+        }
+
+        return false;
+      }
+
+      function addRecursiveBranch(grid, branch, goal, depth) {
+        if (depth <= 0 || branch.length < 3) return 0;
+        const pivot = branch[randInt(1, branch.length - 2)];
+        const child = carveBranch(grid, pivot, {
+          minLen: 2,
+          maxLen: Math.max(3, branch.length - 1),
+          stopChance: 0.45,
+          preferredDirs: getDirectionPreference(pivot, goal)
+        });
+        if (!child.length) return 0;
+        return 1 + addRecursiveBranch(grid, child, goal, depth - 1);
+      }
+
+      function addDecoyBranches(grid, solutionPath, goal, profile) {
+        const middle = shuffle(solutionPath.slice(3, -3));
+        const nearGoalWindow = Math.min(solutionPath.length - 2, profile.nearGoalWindow);
+        const nearGoal = shuffle(solutionPath.slice(Math.max(2, solutionPath.length - 1 - nearGoalWindow), -1));
+        let recursiveLeft = profile.recursiveBudget;
+        let branchesBuilt = 0;
+
+        const guaranteedAnchors = [];
+        for (let i = profile.pathDecisionSpacing; i < solutionPath.length - 3; i += profile.pathDecisionSpacing) {
+          guaranteedAnchors.push(solutionPath[i]);
+        }
+
+        for (const anchor of shuffle(guaranteedAnchors)) {
+          if (branchesBuilt >= profile.minGuaranteedBranches) break;
+          const branch = carveBranch(grid, anchor, {
+            minLen: 2,
+            maxLen: randInt(4, profile.maxBranchLen + 1),
+            stopChance: 0.22,
+            preferredDirs: getDirectionPreference(anchor, goal)
+          });
+          if (!branch.length) continue;
+          branchesBuilt += 1;
+          if (recursiveLeft > 0) {
+            recursiveLeft -= addRecursiveBranch(grid, branch, goal, 1);
+          }
+        }
+
+        for (let i = 0; i < profile.nearGoalDecoys && nearGoal.length; i++) {
+          const anchor = nearGoal.pop();
+          const branch = carveBranch(grid, anchor, {
+            minLen: 3,
+            maxLen: randInt(4, profile.maxBranchLen + 1),
+            stopChance: 0.3,
+            preferredDirs: getDirectionPreference(anchor, goal)
+          });
+          if (!branch.length) continue;
+          branchesBuilt += 1;
+          if (recursiveLeft > 0) recursiveLeft -= addRecursiveBranch(grid, branch, goal, 1);
+        }
+
+        let branchAttempts = 0;
+        while (middle.length && branchesBuilt < profile.branchBudget && branchAttempts < profile.branchBudget * 3) {
+          branchAttempts += 1;
+          const anchor = middle.pop();
+          const branch = carveBranch(grid, anchor, {
+            minLen: 2,
+            maxLen: randInt(3, profile.maxBranchLen),
+            stopChance: 0.24,
+            preferredDirs: getDirectionPreference(anchor, goal)
+          });
+          if (!branch.length) continue;
+          branchesBuilt += 1;
+          if (recursiveLeft > 0) {
+            recursiveLeft -= addRecursiveBranch(grid, branch, goal, randInt(1, Math.min(2, recursiveLeft)));
+          }
+        }
+      }
+
+      function addLoopTraps(grid, solutionPath, profile) {
+        const anchors = shuffle(solutionPath.slice(4, -4));
+        let loopsPlaced = 0;
+        while (anchors.length && loopsPlaced < profile.loopBudget) {
+          if (attachSingleEntryLoop(grid, anchors.pop())) loopsPlaced += 1;
+        }
+      }
+
+      function analyzeMaze(grid, start, goal) {
+        const bfs = bfsGraph(grid, start);
+        const goalKey = keyOf(goal.x, goal.y);
+        if (!bfs.distances.has(goalKey)) {
+          return {
+            reachable: false,
+            uniqueSolution: false,
+            solutionLength: 0,
+            deadEndCount: 0,
+            junctionCount: 0,
+            backtrackPenalty: 0,
+            nearGoalDecoys: 0,
+            pathDecisionCount: 0,
+            longestHallway: 0,
+            path: []
+          };
+        }
+
+        const path = tracePath(bfs.parents, goalKey);
+        const pathSet = new Set(path.map(cell => keyOf(cell.x, cell.y)));
+        const branchVisited = new Set();
+        const branchDepths = [];
+        let deadEndCount = 0;
+        let junctionCount = 0;
+        let pathDecisionCount = 0;
+        let hallwayRun = 0;
+        let longestHallway = 0;
+
+        for (let y = 0; y < grid.length; y++) {
+          for (let x = 0; x < grid[0].length; x++) {
+            if (!isWalkable(grid, x, y)) continue;
+            const degree = getOpenNeighbors(grid, x, y).length;
+            if (degree === 1 && !(x === start.x && y === start.y) && !(x === goal.x && y === goal.y)) {
+              deadEndCount += 1;
+            }
+            if (degree >= 3) junctionCount += 1;
+          }
+        }
+
+        for (let i = 0; i < path.length; i++) {
+          const anchor = path[i];
+          const offPathNeighbors = getOpenNeighbors(grid, anchor.x, anchor.y).filter(neighbor => {
+            return !pathSet.has(keyOf(neighbor.x, neighbor.y));
+          });
+          if (offPathNeighbors.length > 0) {
+            pathDecisionCount += 1;
+            hallwayRun = 0;
+          } else if (i > 0 && i < path.length - 1) {
+            hallwayRun += 1;
+            longestHallway = Math.max(longestHallway, hallwayRun);
+          }
+
+          for (const next of getOpenNeighbors(grid, anchor.x, anchor.y)) {
+            const nextKey = keyOf(next.x, next.y);
+            if (pathSet.has(nextKey) || branchVisited.has(nextKey)) continue;
+
+            const queue = [{ ...next, depth: 1 }];
+            const seen = new Set([nextKey]);
+            branchVisited.add(nextKey);
+            let pointer = 0;
+            let maxDepth = 1;
+
+            while (pointer < queue.length) {
+              const cell = queue[pointer++];
+              maxDepth = Math.max(maxDepth, cell.depth);
+              for (const neighbor of getOpenNeighbors(grid, cell.x, cell.y)) {
+                const neighborKey = keyOf(neighbor.x, neighbor.y);
+                if (pathSet.has(neighborKey) || seen.has(neighborKey)) continue;
+                seen.add(neighborKey);
+                branchVisited.add(neighborKey);
+                queue.push({ ...neighbor, depth: cell.depth + 1 });
+              }
+            }
+
+            branchDepths.push({ depth: maxDepth, anchorIndex: i });
+          }
+        }
+
+        const nearGoalThreshold = Math.max(4, Math.floor(path.length * 0.22));
+        const nearGoalDecoys = branchDepths.filter(branch => {
+          const stepsToGoal = path.length - 1 - branch.anchorIndex;
+          return stepsToGoal <= nearGoalThreshold && branch.depth >= 2;
+        }).length;
+        const backtrackPenalty = branchDepths
+          .slice()
+          .sort((a, b) => b.depth - a.depth)
+          .slice(0, 6)
+          .reduce((sum, branch) => sum + branch.depth * 2, 0);
+
+        return {
+          reachable: true,
+          uniqueSolution: countSimplePaths(grid, start, goal, 2) === 1,
+          solutionLength: path.length - 1,
+          deadEndCount,
+          junctionCount,
+          backtrackPenalty,
+          nearGoalDecoys,
+          pathDecisionCount,
+          longestHallway,
+          path
+        };
+      }
+
+      function getDifficultyProfile(levelIndex) {
+        const depth = levelIndex - 10;
+        const sizeSteps = [15, 17, 19, 21];
+        const sizeIndex = clamp(Math.floor(depth / 10), 0, sizeSteps.length - 1);
+        const size = sizeSteps[sizeIndex];
+
+        return {
+          levelIndex,
+          size,
+          maxAttempts: 120,
+          branchBudget: 10 + Math.floor(depth / 2),
+          recursiveBudget: 3 + Math.floor(depth / 6),
+          loopBudget: 1 + Math.floor(depth / 12),
+          nearGoalDecoys: 2 + Math.floor(depth / 10),
+          nearGoalWindow: 6 + Math.floor(depth / 3),
+          maxBranchLen: 7 + Math.floor(depth / 4),
+          minSolutionLength: 42 + depth * 3 + sizeIndex * 10,
+          minDeadEnds: 18 + depth,
+          minJunctions: 12 + Math.floor(depth * 0.8),
+          minBacktrackPenalty: 28 + depth * 4,
+          minPathDecisions: 5 + Math.floor(depth / 3),
+          maxHallwayRun: Math.max(3, 7 - Math.floor(depth / 12)),
+          pathDecisionSpacing: 4,
+          minGuaranteedBranches: 5 + Math.floor(depth / 6)
+        };
+      }
+
+      function meetsDifficulty(metrics, profile, attempt) {
+        const progress = attempt / profile.maxAttempts;
+        const relax = progress > 0.75 ? 0.82 : progress > 0.5 ? 0.9 : 1;
+        const nearGoalTarget = Math.max(0, Math.floor(profile.nearGoalDecoys * relax));
+        return metrics.uniqueSolution &&
+          metrics.solutionLength >= Math.floor(profile.minSolutionLength * relax) &&
+          metrics.deadEndCount >= Math.floor(profile.minDeadEnds * relax) &&
+          metrics.junctionCount >= Math.floor(profile.minJunctions * relax) &&
+          metrics.backtrackPenalty >= Math.floor(profile.minBacktrackPenalty * relax) &&
+          metrics.nearGoalDecoys >= nearGoalTarget &&
+          metrics.pathDecisionCount >= Math.floor(profile.minPathDecisions * relax) &&
+          metrics.longestHallway <= Math.ceil(profile.maxHallwayRun / relax);
+      }
+
+      function serializeLevel(grid, start, goal) {
+        const copy = cloneGrid(grid);
+        copy[start.y][start.x] = "S";
+        copy[goal.y][goal.x] = "G";
+        return copy.map(row => row.join(""));
+      }
+
+      function buildHardcoreLevel(profile) {
+        for (let attempt = 0; attempt < profile.maxAttempts; attempt++) {
+          const grid = createPerfectMaze(profile.size);
+          const endpoints = findMazeEndpoints(grid);
+          addDecoyBranches(grid, endpoints.path, endpoints.goal, profile);
+          addLoopTraps(grid, endpoints.path, profile);
+
+          const metrics = analyzeMaze(grid, endpoints.start, endpoints.goal);
+          if (meetsDifficulty(metrics, profile, attempt)) {
+            return serializeLevel(grid, endpoints.start, endpoints.goal);
+          }
+        }
+
+        return buildLoopBranchLevel(profile.levelIndex);
+      }
+
+      function buildLevel(index) {
+        const profile = getAlgorithmLevelProfile(index);
+        if (profile.algorithm === "recursive_backtracker") {
+          return finalizePerfectMaze(buildRecursiveBacktrackerMaze(profile.size));
+        }
+        if (profile.algorithm === "hunt_kill") {
+          return finalizePerfectMaze(buildHuntKillMaze(profile.size));
+        }
+        if (profile.algorithm === "prim") {
+          return finalizePerfectMaze(buildPrimMaze(profile.size));
+        }
+        return finalizePerfectMaze(buildGrowingTreeMaze(profile.size));
+      }
+
+      function loadSave() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return { ...DEFAULT_SAVE };
+          return { ...DEFAULT_SAVE, ...JSON.parse(raw) };
+        } catch {
+          return { ...DEFAULT_SAVE };
+        }
+      }
+
+      const levels = Array.from({ length: LEVEL_TOTAL }, () => null);
+
+      function getLevel(index) {
+        if (!levels[index]) levels[index] = buildLevel(index);
+        return levels[index];
+      }
+
+      const state = {
+        levelIndex: 0,
+        grid: [],
+        rows: 0,
+        cols: 0,
+        player: { x: 0, y: 0 },
+        goal: { x: 0, y: 0 },
+        markersLeft: 5,
+        markers: new Set(),
+        stepsInLevel: 0,
+        totalSteps: 0,
+        totalMarkersUsed: 0,
+        currentCharacter: "🐰",
+        save: loadSave()
+      };
+
+      const $ = (id) => document.getElementById(id);
+      state.levelResult = null;
+      const startScreen = $("startScreen");
+      const settingsScreen = $("settingsScreen");
+      const gameScreen = $("gameScreen");
+      const levelCompleteScreen = $("levelCompleteScreen");
+      const endScreen = $("endScreen");
+      const mazeEl = $("maze");
+      const levelTitle = $("levelTitle");
+      const levelInfo = $("levelInfo");
+      const stepsInfo = $("stepsInfo");
+      const markerInfo = $("markerInfo");
+      const charInfo = $("charInfo");
+      const bestInfo = $("bestInfo");
+      const finalText = $("finalText");
+      const levelCompleteTitle = $("levelCompleteTitle");
+      const levelCompleteBadge = $("levelCompleteBadge");
+      const levelCompleteStars = $("levelCompleteStars");
+      const levelCompleteMessage = $("levelCompleteMessage");
+      const levelCompleteSteps = $("levelCompleteSteps");
+      const levelCompleteMarkers = $("levelCompleteMarkers");
+      const levelCompleteNext = $("levelCompleteNext");
+      const saveInfo = $("saveInfo");
+      const jumpHelp = $("jumpHelp");
+      const settingsStats = $("settingsStats");
+      const startLevelSelect = $("startLevelSelect");
+      const gameLevelSelect = $("gameLevelSelect");
+      const cardEl = document.querySelector(".card");
+      const hudEl = document.querySelector(".hud");
+      const controlsEl = document.querySelector(".controls");
+      let preferredVoice = null;
+
+      function saveLocal() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.save));
+        refreshSaveInfo();
+      }
+
+      function refreshSaveInfo() {
+        saveInfo.textContent = `本地记录：最高到第 ${state.save.bestLevel} 关，累计游玩 ${state.save.totalPlays} 次`;
+        settingsStats.textContent = `最高关卡：${state.save.bestLevel}｜通关次数：${state.save.totalWins}｜累计步数：${state.save.allTimeSteps}｜累计标记：${state.save.allTimeMarkers}`;
+        if (jumpHelp) {
+          const nextLevel = Math.min(state.save.bestLevel + 1, LEVEL_TOTAL);
+          jumpHelp.textContent = `默认会选中第 ${nextLevel} 关，你也可以直接跳到任意关开始。`;
+        }
+        refreshLevelSelectors();
+      }
+
+      function buildLevelSelect(selectEl) {
+        if (!selectEl || selectEl.options.length === LEVEL_TOTAL) return;
+        selectEl.innerHTML = "";
+        for (let i = 0; i < LEVEL_TOTAL; i++) {
+          const option = document.createElement("option");
+          option.value = String(i);
+          option.textContent = `第 ${i + 1} 关`;
+          selectEl.appendChild(option);
+        }
+      }
+
+      function getDefaultSelectedLevelIndex() {
+        return clamp(state.save.bestLevel, 0, LEVEL_TOTAL - 1);
+      }
+
+      function refreshLevelSelectors(selectedIndex = null) {
+        buildLevelSelect(startLevelSelect);
+        buildLevelSelect(gameLevelSelect);
+        const index = clamp(
+          selectedIndex ?? getDefaultSelectedLevelIndex(),
+          0,
+          LEVEL_TOTAL - 1
+        );
+        if (startLevelSelect) startLevelSelect.value = String(index);
+        if (gameLevelSelect) gameLevelSelect.value = String(index);
+      }
+
+      function syncLevelSelectorsFrom(source) {
+        if (!source) return;
+        const index = clamp(Number(source.value) || 0, 0, LEVEL_TOTAL - 1);
+        refreshLevelSelectors(index);
+      }
+
+      function getSelectedLevelIndex(selectEl) {
+        return clamp(Number(selectEl?.value) || 0, 0, LEVEL_TOTAL - 1);
+      }
+
+      function canSpeak() {
+        return typeof window !== "undefined" &&
+          "speechSynthesis" in window &&
+          typeof window.SpeechSynthesisUtterance !== "undefined";
+      }
+
+      function bindSpeechVoice() {
+        if (!canSpeak()) return;
+        const voices = window.speechSynthesis.getVoices();
+        preferredVoice = voices.find(voice => /zh|cmn/i.test(`${voice.lang} ${voice.name}`)) || voices[0] || null;
+      }
+
+      function stopSpeech() {
+        if (!canSpeak()) return;
+        window.speechSynthesis.cancel();
+      }
+
+      function speakLevelComplete() {
+        if (!canSpeak()) return;
+        stopSpeech();
+        const utterance = new SpeechSynthesisUtterance(LEVEL_COMPLETE_VOICE_TEXT);
+        utterance.lang = "zh-CN";
+        utterance.rate = 0.92;
+        utterance.pitch = 1.08;
+        utterance.volume = 1;
+        if (preferredVoice) utterance.voice = preferredVoice;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function getLevelFeedback(levelIndex, stepsInLevel, markersUsed) {
+        const expected = Math.max(18, state.rows + state.cols + Math.floor(levelIndex * 1.6));
+        const score = expected - stepsInLevel - markersUsed * 4;
+        let stars = 1;
+        if (score >= 8) stars = 3;
+        else if (score >= -6) stars = 2;
+
+        const titles = ["继续加油", "真不错", "超级棒"];
+        const messages = [
+          "过关啦，继续保持耐心，下一关也一定能走出来！",
+          "你已经越来越会找路线啦，继续出发吧！",
+          "路线找得又快又稳，毛毛今天表现太棒啦！"
+        ];
+
+        return {
+          stars,
+          title: titles[stars - 1],
+          message: messages[stars - 1]
+        };
+      }
+
+      function hideAllScreens() {
+        startScreen.classList.add("hidden");
+        settingsScreen.classList.add("hidden");
+        gameScreen.classList.add("hidden");
+        levelCompleteScreen.classList.add("hidden");
+        endScreen.classList.add("hidden");
+      }
+
+      function renderLevelComplete() {
+        if (!state.levelResult) return;
+        const result = state.levelResult;
+        levelCompleteTitle.textContent = `第 ${result.completedLevel} 关完成`;
+        levelCompleteBadge.textContent = result.title;
+        levelCompleteStars.textContent = "⭐".repeat(result.stars);
+        levelCompleteMessage.textContent = result.message;
+        levelCompleteSteps.textContent = `步数：${result.steps}`;
+        levelCompleteMarkers.textContent = `标记：${result.markersUsed}`;
+        levelCompleteNext.textContent = result.completedLevel >= LEVEL_TOTAL
+          ? "已完成全部关卡"
+          : `下一关：第 ${result.completedLevel + 1} 关`;
+        $("nextLevelBtn").textContent = result.completedLevel >= LEVEL_TOTAL ? "查看总结" : "下一关";
+      }
+
+      function showLevelComplete() {
+        const completedLevel = state.levelIndex + 1;
+        const markersUsed = 5 - state.markersLeft;
+        const feedback = getLevelFeedback(state.levelIndex, state.stepsInLevel, markersUsed);
+        if (completedLevel > state.save.bestLevel) {
+          state.save.bestLevel = completedLevel;
+          saveLocal();
+        }
+        state.levelResult = {
+          completedLevel,
+          steps: state.stepsInLevel,
+          markersUsed,
+          nextLevelIndex: state.levelIndex + 1,
+          ...feedback
+        };
+
+        hideAllScreens();
+        levelCompleteScreen.classList.remove("hidden");
+        renderLevelComplete();
+        speakLevelComplete();
+      }
+
+      function continueToNextLevel() {
+        stopSpeech();
+        if (!state.levelResult) return;
+        if (state.levelResult.completedLevel >= LEVEL_TOTAL) {
+          showEnd();
+          return;
+        }
+        nextLevel();
+      }
+
+      function pickCharacter() {
+        state.currentCharacter = characters[Math.floor(Math.random() * characters.length)];
+      }
+
+      function parseLevel(raw) {
+        state.grid = raw.map(row => row.split(""));
+        state.rows = state.grid.length;
+        state.cols = state.grid[0].length;
+        for (let y = 0; y < state.rows; y++) {
+          for (let x = 0; x < state.cols; x++) {
+            const cell = state.grid[y][x];
+            if (cell === "S") state.player = { x, y };
+            if (cell === "G") state.goal = { x, y };
+          }
+        }
+        state.markersLeft = 5;
+        state.markers = new Set();
+        state.stepsInLevel = 0;
+        pickCharacter();
+      }
+
+      function updateHud() {
+        levelTitle.textContent = `第 ${state.levelIndex + 1} 关`;
+        levelInfo.textContent = `关卡：${state.levelIndex + 1} / ${LEVEL_TOTAL}`;
+        stepsInfo.textContent = `步数：${state.stepsInLevel}`;
+        markerInfo.textContent = `标记剩余：${state.markersLeft}`;
+        charInfo.textContent = `角色：${state.currentCharacter}`;
+        bestInfo.textContent = `历史最高：${state.save.bestLevel}`;
+      }
+
+      function cellType(x, y) {
+        const cell = state.grid[y][x];
+        if (cell === "#") return "wall";
+        if (cell === "G") return "goal";
+        return "path";
+      }
+
+      function getVisualMetrics(cell) {
+        const gap = cell >= 34 ? 2 : cell >= 22 ? 1 : 0;
+        const pad = cell >= 34 ? 6 : cell >= 24 ? 4 : 2;
+        return {
+          cell,
+          gap,
+          pad,
+          radius: Math.max(4, Math.round(cell * 0.18)),
+          font: Math.max(11, Math.round(cell * 0.54))
+        };
+      }
+
+      function computeMazeMetrics() {
+        const bodyStyle = getComputedStyle(document.body);
+        const cardStyle = getComputedStyle(cardEl);
+        const pagePad = parseFloat(bodyStyle.paddingTop) || 0;
+        const cardPadX = (parseFloat(cardStyle.paddingLeft) || 0) + (parseFloat(cardStyle.paddingRight) || 0);
+        const availableWidth = Math.max(
+          180,
+          Math.min(cardEl.clientWidth - cardPadX, window.innerWidth - pagePad * 2 - 8)
+        );
+        const reservedHeight = levelTitle.offsetHeight + hudEl.offsetHeight + controlsEl.offsetHeight + pagePad * 2 + 40;
+        const availableHeight = Math.max(160, window.innerHeight - reservedHeight);
+
+        for (let cell = 56; cell >= 16; cell--) {
+          const metrics = getVisualMetrics(cell);
+          const mazeWidth = state.cols * metrics.cell + Math.max(0, state.cols - 1) * metrics.gap + metrics.pad * 2;
+          const mazeHeight = state.rows * metrics.cell + Math.max(0, state.rows - 1) * metrics.gap + metrics.pad * 2;
+          if (mazeWidth <= availableWidth && mazeHeight <= availableHeight) {
+            return metrics;
+          }
+        }
+
+        return getVisualMetrics(16);
+      }
+
+      function updateCellSize() {
+        const metrics = computeMazeMetrics();
+        mazeEl.style.setProperty("--cell", `${metrics.cell}px`);
+        mazeEl.style.setProperty("--maze-gap", `${metrics.gap}px`);
+        mazeEl.style.setProperty("--maze-pad", `${metrics.pad}px`);
+        mazeEl.style.setProperty("--cell-radius", `${metrics.radius}px`);
+        mazeEl.style.setProperty("--cell-font", `${metrics.font}px`);
+      }
+
+      function render() {
+        mazeEl.style.setProperty("--rows", state.rows);
+        mazeEl.style.setProperty("--cols", state.cols);
+        updateHud();
+        updateCellSize();
+        mazeEl.innerHTML = "";
+
+        for (let y = 0; y < state.rows; y++) {
+          for (let x = 0; x < state.cols; x++) {
+            const div = document.createElement("div");
+            div.className = `cell ${cellType(x, y)}`;
+
+            const key = keyOf(x, y);
+            if (state.markers.has(key)) div.textContent = MARKER_ICON;
+            if (x === state.goal.x && y === state.goal.y) div.textContent = GOAL_ICON;
+            if (x === state.player.x && y === state.player.y) div.textContent = state.currentCharacter;
+
+            mazeEl.appendChild(div);
+          }
+        }
+      }
+
+      function canWalk(x, y) {
+        return x >= 0 && y >= 0 && x < state.cols && y < state.rows && state.grid[y][x] !== "#";
+      }
+
+      function move(dx, dy) {
+        const nx = state.player.x + dx;
+        const ny = state.player.y + dy;
+        if (!canWalk(nx, ny)) return;
+
+        state.player = { x: nx, y: ny };
+        state.stepsInLevel += 1;
+        state.totalSteps += 1;
+        render();
+
+        if (nx === state.goal.x && ny === state.goal.y) {
+          setTimeout(showLevelComplete, 180);
+        }
+      }
+
+      function placeMarker() {
+        const key = keyOf(state.player.x, state.player.y);
+        if (state.markers.has(key) || state.markersLeft <= 0) return;
+
+        state.markers.add(key);
+        state.markersLeft -= 1;
+        state.totalMarkersUsed += 1;
+        render();
+      }
+
+      function nextLevel() {
+        const reachedLevel = state.levelIndex + 1;
+        if (reachedLevel > state.save.bestLevel) {
+          state.save.bestLevel = reachedLevel;
+          saveLocal();
+        }
+
+        state.levelIndex += 1;
+        if (state.levelIndex >= LEVEL_TOTAL) {
+          showEnd();
+          return;
+        }
+
+        parseLevel(getLevel(state.levelIndex));
+        refreshLevelSelectors(state.levelIndex);
+        hideAllScreens();
+        gameScreen.classList.remove("hidden");
+        render();
+      }
+
+      function startGame(levelIndex = 0) {
+        stopSpeech();
+        state.levelIndex = clamp(levelIndex, 0, LEVEL_TOTAL - 1);
+        state.totalSteps = 0;
+        state.totalMarkersUsed = 0;
+        state.levelResult = null;
+        state.save.totalPlays += 1;
+        saveLocal();
+
+        parseLevel(getLevel(state.levelIndex));
+        refreshLevelSelectors(state.levelIndex);
+        hideAllScreens();
+        gameScreen.classList.remove("hidden");
+        render();
+      }
+
+      function showEnd() {
+        stopSpeech();
+        hideAllScreens();
+        endScreen.classList.remove("hidden");
+
+        state.save.totalWins += 1;
+        state.save.allTimeSteps += state.totalSteps;
+        state.save.allTimeMarkers += state.totalMarkersUsed;
+        if (LEVEL_TOTAL > state.save.bestLevel) state.save.bestLevel = LEVEL_TOTAL;
+        saveLocal();
+
+        finalText.textContent = `你完成了 ${LEVEL_TOTAL} 关，共走了 ${state.totalSteps} 步，用了 ${state.totalMarkersUsed} 个标记。`;
+      }
+
+      function openSettings() {
+        stopSpeech();
+        hideAllScreens();
+        settingsScreen.classList.remove("hidden");
+        refreshSaveInfo();
+      }
+
+      function backToStart() {
+        stopSpeech();
+        hideAllScreens();
+        startScreen.classList.remove("hidden");
+        refreshSaveInfo();
+      }
+
+      function resetData() {
+        const ok = confirm("确定要重置本地数据吗？\n最高关卡和累计记录都会清空。");
+        if (!ok) return;
+
+        state.save = { ...DEFAULT_SAVE };
+        localStorage.removeItem(STORAGE_KEY);
+        saveLocal();
+        alert("本地数据已重置。");
+        backToStart();
+      }
+
+      document.querySelectorAll(".move[data-dir]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dir = btn.dataset.dir;
+          if (dir === "up") move(0, -1);
+          if (dir === "down") move(0, 1);
+          if (dir === "left") move(-1, 0);
+          if (dir === "right") move(1, 0);
+        });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (gameScreen.classList.contains("hidden")) return;
+        if (e.key === "ArrowUp") { e.preventDefault(); move(0, -1); }
+        if (e.key === "ArrowDown") { e.preventDefault(); move(0, 1); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); move(-1, 0); }
+        if (e.key === "ArrowRight") { e.preventDefault(); move(1, 0); }
+        if (e.key.toLowerCase() === "m" || e.key === " ") { e.preventDefault(); placeMarker(); }
+      });
+
+      window.addEventListener("resize", () => {
+        if (!gameScreen.classList.contains("hidden")) render();
+      });
+
+      if (canSpeak()) {
+        bindSpeechVoice();
+        window.speechSynthesis.addEventListener("voiceschanged", bindSpeechVoice);
+      }
+
+      startLevelSelect.addEventListener("change", () => syncLevelSelectorsFrom(startLevelSelect));
+      gameLevelSelect.addEventListener("change", () => syncLevelSelectorsFrom(gameLevelSelect));
+      $("startBtn").addEventListener("click", () => startGame(getSelectedLevelIndex(startLevelSelect)));
+      $("jumpStartBtn").addEventListener("click", () => startGame(getSelectedLevelIndex(startLevelSelect)));
+      $("restartBtn").addEventListener("click", () => startGame(getSelectedLevelIndex(startLevelSelect)));
+      $("jumpBtn").addEventListener("click", () => startGame(getSelectedLevelIndex(gameLevelSelect)));
+      $("markBtn").addEventListener("click", placeMarker);
+      $("replayVoiceBtn").addEventListener("click", speakLevelComplete);
+      $("nextLevelBtn").addEventListener("click", continueToNextLevel);
+      $("backToStartBtn").addEventListener("click", backToStart);
+      $("openSettingsBtn").addEventListener("click", openSettings);
+      $("backFromSettingsBtn").addEventListener("click", backToStart);
+      $("resetDataBtn").addEventListener("click", resetData);
+
+      window.__mazeDebug = { getLevel, analyzeMaze, getDifficultyProfile };
+      refreshSaveInfo();
+    })();
+  </script>
 </body>
 </html>
